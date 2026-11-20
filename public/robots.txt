@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://mea-code-search.pages.dev/sitemap.xml

@@ -1,0 +1,213 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import AdSlot from '../components/AdSlot.astro';
+import { SITE, CATEGORIES, CATEGORY_NAMES, DEFAULT_ORDER, FAQS, SISTER_BLOGS, slugOf } from '../data/site';
+
+const articles = await getCollection('articles');
+const bySlug = new Map(articles.map((a) => [slugOf(a.id), a]));
+// 旧サイトの表示順（おすすめ順）に並べる
+const ordered = DEFAULT_ORDER.map((s) => bySlug.get(s)!).filter(Boolean);
+const byCategory = (slug: string) => articles.filter((a) => a.data.category === slug);
+
+const itemList = ordered.map((a, i) => ({
+  '@type': 'ListItem',
+  position: i + 1,
+  name: `${a.data.service} ${a.data.code ? `紹介コード ${a.data.code}` : ''} ${a.data.benefit}`,
+}));
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      name: 'メアのポイ活コード検索｜紹介コード・招待コードを検索してすぐコピー',
+      description: SITE.description,
+      inLanguage: 'ja',
+      dateModified: SITE.dateModified,
+    },
+    { '@type': 'ItemList', name: '紹介コード・招待コード一覧', numberOfItems: 19, itemListElement: itemList },
+    {
+      '@type': 'FAQPage',
+      mainEntity: FAQS.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'ポイ活コード検索 トップ' },
+      ],
+    },
+  ],
+};
+
+const title = 'メアのポイ活コード検索｜紹介コード・招待コードを検索してすぐコピー';
+---
+
+<BaseLayout title={title} description={SITE.description} canonicalPath="/" jsonLd={jsonLd}>
+  <div class="wrap">
+    <div class="hero">
+      <img src="/images/hero.jpg" alt="メアのポイ活×招待コード×紹介系バナー｜お得をもっと身近に、一緒におトクをGETしよう" width="1179" height="393" />
+    </div>
+
+    <div class="pr-box">
+      このページは広告（PR）を含みます。掲載している紹介リンク・紹介コードを使って各サービスに登録し、所定の条件を満たすと、メア（紹介者）に、各サービスの運営会社から紹介報酬が支払われる場合があります。紹介報酬が発生しても、あなたの特典が減ったり、利用料金が上乗せされたりすることはないので安心してね。仕組みと対象範囲は<a href="/ad-disclosure/">「広告・紹介報酬に関する表記」</a>にまとめています。
+    </div>
+
+    <p class="article-meta">最終更新：2026年11月19日／特典額・条件は各サービスの紹介キャンペーン内容をもとに掲載しているよ♪ キャンペーンは予告なく変更・終了する場合があるから、登録前に公式ページもチェックしてね💡</p>
+
+    <h1>メアのポイ活コード検索｜紹介コード・招待コードを探して、すぐコピー💖</h1>
+    <p class="lead">
+      こんにちは、メアです💖 ワラウ・ハピタス・モッピー・Freecash・TikTok・PayPay・楽天モバイルなど<strong>全19サービス</strong>の紹介コード・招待コード・特典額・条件・登録リンクを、メアがまとめて検索できるようにしたページだよ✨ サービス名やコードで検索して、ワンタップでコピーしてね♪ 無言利用OK、あなたの個人情報がメアに伝わることはないので安心してね😊
+    </p>
+
+    <AdSlot />
+
+    <h2 id="search">🔍 紹介コードを検索する</h2>
+    <div class="search-box">
+      <input id="q" type="search" placeholder="例：ワラウ / 3BQLXB / ゲーム" aria-label="検索キーワード" />
+      <button id="clear-btn" type="button">クリア</button>
+    </div>
+    <div class="filter-chips" role="group" aria-label="カテゴリで絞り込む">
+      <button type="button" class="chip active" data-filter="all">すべて <span>19</span></button>
+      {CATEGORIES.map((c) => (
+        <button type="button" class="chip" data-filter={c.slug}>{c.name} <span>{byCategory(c.slug).length}</span></button>
+      ))}
+    </div>
+    <div class="search-meta">
+      <p class="search-note"><span id="count">19</span>件のサービス</p>
+      <label class="sort-label">並び替え
+        <select id="sort" aria-label="並び替え">
+          <option value="default">おすすめ順</option>
+          <option value="benefit">特典額が大きい順</option>
+          <option value="name">名前順</option>
+        </select>
+      </label>
+    </div>
+    <p class="search-hint">特典額が大きい順は、円・ポイント換算できる特典を大きい順に並べています（換算できない特典は末尾に表示します）。</p>
+
+    <div class="card-grid" id="results">
+      {ordered.map((a) => <ServiceCard article={a} />)}
+    </div>
+    <div class="empty-state" id="empty" hidden>
+      <p>該当するサービスが見つかりませんでした💦</p>
+      <p>検索キーワードやカテゴリを変えて、もう一度お試しください。</p>
+      <button id="reset-btn" type="button">検索をリセット</button>
+    </div>
+
+    <AdSlot />
+
+    <h2 id="howto">コード検索の使い方｜紹介コードで損しない3ステップ✨</h2>
+    <p>ポイ活初心者さんがつまずきやすいのは「登録してからコードを探す」パターン💦 特典は<strong>登録時だけ</strong>が対象のことがほとんどだから、登録前にチェックしてね♪</p>
+    <ol class="steps">
+      <li><strong>検索してコードをコピー</strong>：上の検索ボックスにサービス名を入れて、カードの「コピー」ボタンで紹介コードを控えてね。リンク型はそのまま次のステップへGO！</li>
+      <li><strong>紹介リンクから登録</strong>：必ずカードの登録ボタンから進んで登録してね。公式サイトから直接登録すると紹介特典が付かない場合があるよ💡</li>
+      <li><strong>条件を達成して受け取る</strong>：広告利用・支払い・発信通話など、特典条件は各カードに書いてあるよ。期限があるものは早めに済ませちゃおう♪</li>
+    </ol>
+
+    <h2 id="faq">よくある質問｜紹介コード・ポイ活の疑問</h2>
+    {FAQS.map((f) => (
+      <div class="faq-item">
+        <h3>{f.q}</h3>
+        <p>{f.a}</p>
+      </div>
+    ))}
+    <p><a href="/faq/">よくある質問の一覧を見る →</a></p>
+
+    <h2 id="sisters">メアの姉妹ブログ｜同じコードを、違う切り口で💖</h2>
+    <p>メアは紹介コードのまとめサイトを、姉妹ブログとあわせて6つ運営しているよ♪ 見やすい形式のブログからどうぞ💕</p>
+    <ul>
+      {SISTER_BLOGS.map((b) => (
+        <li><a href={b.url} target="_blank" rel="noopener">{b.name}</a>：{b.note}</li>
+      ))}
+    </ul>
+
+    <h2>📂 カテゴリー</h2>
+    <ul>
+      {CATEGORIES.map((c) => (
+        <li><a href={`/categories/${c.slug}/`}>{c.name}</a>（{byCategory(c.slug).length}）</li>
+      ))}
+    </ul>
+
+    <h2>🔥 人気の紹介コード</h2>
+    <ul>
+      <li><a href="/articles/freecash/">Freecash 3BQLXB</a> 約1,430円相当</li>
+      <li><a href="/articles/rakuten-mobile/">楽天モバイル</a> 最大13,000pt</li>
+      <li><a href="/articles/moppy/">モッピー 7xaGA123</a> 最大7,000P</li>
+      <li><a href="/articles/tiktok/">TikTok 284097117</a> 6,000円分</li>
+      <li><a href="/articles/warau/">ワラウ bEs7</a> 最大2,500pt</li>
+      <li><a href="/articles/hapitas/">ハピタス INXAHV</a> 最大2,300P</li>
+    </ul>
+
+    <h2>🌐 全媒体の入口</h2>
+    <p><a href={SITE.hubUrl} target="_blank" rel="noopener">メアのポイ活メディア（トップページ）</a> — ホームページ・ブログ・掲示板・note・Xなど、メアの媒体はここからたどれます♪</p>
+
+    <h2>🎀 このコード検索について</h2>
+    <p>ポイ活大好きなメアが、実際に使っている紹介コードだけをまとめた検索ページだよ💖 特典額や条件が変わったら随時更新していくね♪</p>
+    <p><a href="/about/">運営者情報を見る →</a></p>
+
+    <AdSlot />
+  </div>
+  <script>
+    // トップページの検索・絞り込み・並び替え（旧サイトの検索フォーム＋フィルター＋並び替えを再現）
+    const input = document.getElementById('q');
+    const clearBtn = document.getElementById('clear-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const sortSel = document.getElementById('sort');
+    const results = document.getElementById('results');
+    const empty = document.getElementById('empty');
+    const count = document.getElementById('count');
+    const chips = Array.from(document.querySelectorAll('.chip'));
+    const cards = Array.from(results.children);
+    // 初期表示順（おすすめ順）を記録しておく
+    const defaultOrder = cards.slice();
+    let activeFilter = 'all';
+
+    function apply() {
+      const q = input.value.trim().toLowerCase();
+      let visible = cards.filter((card) => {
+        const catOk = activeFilter === 'all' || card.dataset.category === activeFilter;
+        const textOk = !q || card.textContent.toLowerCase().includes(q);
+        return catOk && textOk;
+      });
+      const mode = sortSel.value;
+      if (mode === 'benefit') {
+        visible = visible.slice().sort((a, b) => (Number(b.dataset.sortYen) || 0) - (Number(a.dataset.sortYen) || 0));
+      } else if (mode === 'name') {
+        visible = visible.slice().sort((a, b) => (a.dataset.service || '').localeCompare(b.dataset.service || '', 'ja'));
+      } else {
+        visible = defaultOrder.filter((c) => visible.includes(c));
+      }
+      cards.forEach((card) => { card.style.display = 'none'; });
+      visible.forEach((card) => {
+        card.style.display = '';
+        results.appendChild(card);
+      });
+      count.textContent = String(visible.length);
+      empty.hidden = visible.length !== 0;
+    }
+
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        chips.forEach((c) => c.classList.remove('active'));
+        chip.classList.add('active');
+        activeFilter = chip.dataset.filter;
+        apply();
+      });
+    });
+    input.addEventListener('input', apply);
+    sortSel.addEventListener('change', apply);
+    clearBtn.addEventListener('click', () => { input.value = ''; apply(); input.focus(); });
+    resetBtn.addEventListener('click', () => {
+      input.value = '';
+      activeFilter = 'all';
+      chips.forEach((c) => c.classList.toggle('active', c.dataset.filter === 'all'));
+      sortSel.value = 'default';
+      apply();
+    });
+  </script>
+</BaseLayout>
