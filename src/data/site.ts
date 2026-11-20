@@ -49,7 +49,7 @@ export const DEFAULT_ORDER = [
   'sampo',
   'butamaru',
   'mirapoi',
-  'tokueu',
+  'tokueru',
   'dips',
 ] as const;
 
