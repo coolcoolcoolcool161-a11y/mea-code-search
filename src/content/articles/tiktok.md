@@ -20,6 +20,8 @@ image: "https://coolcoolcoolcool161-a11y.github.io/mea-poikatsu-blog/images/bann
 
 世界中で人気のショート動画アプリ。新規登録＋条件達成で6,000円分の報酬獲得チャンスがあります。
 
+![TikTokの招待特典（最大6,000円分）の案内画像](/images/tiktok-promo-mea.webp)
+
 ## 紹介特典・獲得条件
 
 - **新規登録＋条件達成で6,000円分の報酬獲得チャンス**
