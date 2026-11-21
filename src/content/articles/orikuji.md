@@ -7,6 +7,7 @@ benefit: "500ptプレゼント"
 benefitSub: "新規登録後24時間以内の入力で"
 code: "AZ3pOY"
 url: "https://bit.ly/4fEUA8S"
+image: "/images/banner-orikuji.jpg"
 dateModified: "2026-11-19"
 sortYen: 0
 points:

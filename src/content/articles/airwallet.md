@@ -7,6 +7,7 @@ benefit: "Ponta 300pt"
 benefitSub: "新規登録でプレゼント"
 code: "qpgtg29"
 url: "https://point.recruit.co.jp/recruitid/doc/campaign/aw/airwallet202610_invitation/W7nd8/?vos=wercdSGCbnrlink20250121621"
+image: "/images/banner-airwallet.jpg"
 dateModified: "2026-11-19"
 sortYen: 300
 points:

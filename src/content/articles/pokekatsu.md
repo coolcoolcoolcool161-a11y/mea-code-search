@@ -6,6 +6,7 @@ category: others
 benefit: "合計1,300円分"
 benefitSub: "500円無料＋ほか"
 code: "2BGZ325P"
+image: "/images/banner-pokekatsu.jpg"
 dateModified: "2026-11-19"
 sortYen: 1300
 points:
