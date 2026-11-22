@@ -61,8 +61,8 @@ export const SISTER_BLOGS = [
     url: 'https://coolcoolcoolcool161-a11y.github.io/mea-poikatsu-blog/',
   },
   {
-    name: '紹介コードランキング',
-    note: '特典額の大きさで並べたランキング形式。金額で選びたい人に。',
+    name: 'おすすめ紹介コード',
+    note: 'メアのおすすめ順に並べた紹介コード案内。おすすめから選びたい人に。',
     url: 'https://coolcoolcoolcool161-a11y.github.io/mea-ranking/',
   },
   {
