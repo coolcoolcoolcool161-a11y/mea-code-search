@@ -33,13 +33,13 @@ export const CATEGORY_NAMES: Record<string, string> = Object.fromEntries(
 // 旧サイトの表示順（おすすめ順）。トップページの初期表示と「おすすめ順」の並びに使う。
 export const DEFAULT_ORDER = [
   'freecash',
-  'rakuten-mobile',
-  'moppy',
-  'tiktok',
   'warau',
-  'hapitas',
-  'olive',
+  'tiktok',
   'tiktok-lite',
+  'moppy',
+  'hapitas',
+  'rakuten-mobile',
+  'olive',
   'pokekatsu',
   'mercari',
   'paypay',
