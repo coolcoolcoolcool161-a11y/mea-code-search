@@ -7,7 +7,7 @@ benefit: "最大2,500pt"
 benefitSub: "初回ボーナスUP"
 code: "bEs7"
 url: "https://www.warau.jp/friend/reg/bEs5"
-image: "/images/banner-official-warau.png"
+image: "/images/banner-warau.jpg"
 imageAlt: "ワラウ公式リンクバナー"
 dateModified: "2026-11-19"
 sortYen: 2500
