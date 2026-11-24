@@ -57,7 +57,7 @@ const imgSize = data.image ? IMG_DIMS[data.image] : undefined;
   <p class="original-link"><a href={`/mea-code-search/articles/${slug}/`}>紹介文（原文）・条件の全文を見る →</a></p>
   {data.conditions && <p class="conditions">{data.conditions}</p>}
   {data.url ? (
-    <a class="register-btn" href={data.url} target="_blank" rel="sponsored noopener" data-service={slug} data-position={ctaPosition}>
+    <a class="register-btn" href={data.url} target="_blank" rel="sponsored noopener" data-service={slug} data-position={ctaPosition} data-ref-service={slug} data-ref-placement={ctaPosition}>
       無料で登録する
     </a>
   ) : data.officialSite ? (

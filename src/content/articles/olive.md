@@ -4,7 +4,6 @@ description: "Oliveアカウント紹介プログラム。エントリー＋Oliv
 service: "SMBC Olive（三井住友銀行）"
 category: payment-bank
 benefit: "Vポイント1,000円相当"
-benefitSub: "Vポイント"
 code: "FF89103-3439377"
 url: "https://www.smbc.co.jp/kojin/redirect/referral04/index.html"
 image: "/images/banner-olive.jpg"

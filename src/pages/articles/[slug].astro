@@ -6,6 +6,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 import ServiceCard from '../../components/ServiceCard.astro';
 import { SITE, CATEGORY_NAMES, slugOf } from '../../data/site';
+import { factsOf } from '../../data/services';
 
 export async function getStaticPaths() {
   const articles = await getCollection('articles');
@@ -14,6 +15,23 @@ export async function getStaticPaths() {
 
 const { article } = Astro.props;
 const { data } = article;
+
+// S04再構築（2026-11-25）：特典定義ボックス・運営コードボックスは事実の正
+// （src/data/services.ts 経由の services-data.json 同期コピー）から描画する。
+// 正に無いサービスがあれば frontmatter にフォールバックする。
+const slug = slugOf(article.id);
+const facts = factsOf(slug);
+const benefit = facts?.benefit ?? data.benefit;
+const code = facts ? facts.code : (data.code ?? null);
+const friendCode = facts?.friendCode ?? null;
+const url = facts ? facts.url : (data.url ?? null);
+const officialSite = facts ? facts.officialSite : (data.officialSite ?? null);
+const conditionsList = facts ? facts.conditions : (data.conditions ? [data.conditions] : []);
+const deadline = facts?.deadline ?? null;
+const verified = facts?.verified;
+const codeLabel = slug === 'dips' ? 'メア特別コード（インフルエンサーコード）' : '紹介コード';
+const IMG_DIMS: Record<string, [number, number]> = {"/images/banner-freecash.jpg": [2400, 800], "/images/banner-muse.jpg": [2400, 800], "/images/banner-hapitas.jpg": [561, 129], "/images/banner-moppy.jpg": [234, 60], "/images/banner-warau.jpg": [234, 60], "/images/hero.jpg": [1179, 393], "https://mea-poikatsu.github.io/mea-poikatsu-blog/images/banner-rakuten.jpg": [2400, 800], "https://mea-poikatsu.github.io/mea-poikatsu-blog/images/banner-tiktok.jpg": [2400, 800], "https://mea-poikatsu.github.io/mea-poikatsu-blog/images/banner-freecash.jpg": [2400, 800], "/images/banner-orikuji.jpg": [2400, 800], "/images/banner-pokekatsu.jpg": [2400, 800], "/images/banner-tiktok-lite.jpg": [2400, 800], "/images/banner-paypay.jpg": [2400, 800], "/images/banner-airwallet.jpg": [2400, 800], "/images/banner-olive.jpg": [2400, 800], "/images/banner-sampo.jpg": [2400, 800], "/images/banner-butamaru.jpg": [2400, 800], "/images/banner-mirapoi.jpg": [2400, 800], "/images/banner-tokueru.jpg": [2400, 800], "/images/banner-dips.jpg": [2400, 800]};
+const imgSize = data.image ? IMG_DIMS[data.image] : undefined;
 
 // 記事本文の中段に忍者AdMaxの中段枠（position="middle"）を差し込む（2026-11-21 ユーザー決定）。
 // 本文Markdown自体は変更せず、「## 」見出しセクションの半分を過ぎた最初の見出しの直前で分割して描画する。
@@ -75,7 +93,72 @@ const jsonLd = {
 
     <AdSlot position="top" />
 
-    <ServiceCard article={article} detailLink={false} ctaPosition="article_top" headingLevel={2} />
+    {data.image && (
+      <img class="banner-img" src={data.image.startsWith('http') ? data.image : '/mea-code-search' + data.image} alt={data.imageAlt ?? `${data.service}の紹介バナー`} width={imgSize?.[0]} height={imgSize?.[1]} />
+    )}
+    <p class="lead">{data.description}</p>
+
+    <section class="benefit-def" aria-label="特典の定義">
+      <h2 class="benefit-def-title">特典の定義｜招待された側がもらえるもの</h2>
+      <div class="benefit-def-body">
+        <p class="benefit-def-value"><span class="benefit-def-label">特典</span><strong>{benefit}</strong></p>
+        {conditionsList.length > 0 && (
+          <div class="benefit-def-row">
+            <p class="benefit-def-label">条件</p>
+            <ul class="benefit-def-conditions">
+              {conditionsList.map((c) => <li>{c}</li>)}
+            </ul>
+          </div>
+        )}
+        {deadline && <p class="benefit-def-deadline"><span class="benefit-def-label">期限・期間</span>{deadline}</p>}
+        {verified && <p class="benefit-def-verified">最終確認日：{verified}（公式情報）</p>}
+      </div>
+    </section>
+
+    <section class="code-box" aria-label="紹介コード">
+      <h2 class="code-box-title">メアの紹介コード</h2>
+      {code ? (
+        <>
+          <p class="code-box-label">{codeLabel}</p>
+          <div class="code-row code-row-big">
+            <code>{code}</code>
+            <button class="copy-btn" type="button" data-copy={code} data-service={slug}>
+              <span class="copy-label">コピー</span>
+            </button>
+          </div>
+          {friendCode && (
+            <>
+              <p class="code-box-label">友達招待コード（両方入力でお得）</p>
+              <div class="code-row code-row-big">
+                <code>{friendCode}</code>
+                <button class="copy-btn" type="button" data-copy={friendCode} data-service={slug}>
+                  <span class="copy-label">コピー</span>
+                </button>
+              </div>
+            </>
+          )}
+        </>
+      ) : (
+        <p class="conditions">紹介コードはありません。紹介リンクから登録してください。</p>
+      )}
+      {url ? (
+        <a class="register-btn" href={url} target="_blank" rel="sponsored noopener" data-service={slug} data-position="article_top" data-ref-service={slug} data-ref-placement="article_top">
+          無料で登録する
+        </a>
+      ) : officialSite ? (
+        <a class="register-btn" href={officialSite} target="_blank" rel="noopener" data-service={slug} data-position="article_top">
+          公式サイトを見る
+        </a>
+      ) : (
+        <p class="conditions">※{data.service}は招待コードのみの紹介です。アプリ・サイト内でコードを入力してください。</p>
+      )}
+      {data.points && (
+        <ul class="points">
+          {data.points.map((p) => <li>{p}</li>)}
+        </ul>
+      )}
+      {data.prNote && <p class="pr-note">{data.prNote}</p>}
+    </section>
 
     <div class="article-extra" set:html={firstHtml} />
 
@@ -87,36 +170,42 @@ const jsonLd = {
       <h2>{data.service}の特典と紹介コード</h2>
       <div class="benefit-badge">
         <span class="benefit-label">登録者特典</span>
-        <span class="benefit-value">{data.benefit}</span>
+        <span class="benefit-value">{benefit}</span>
       </div>
-      {data.code ? (
-        <div class="code-row">
-          <code>{data.code}</code>
-          <button class="copy-btn" type="button" data-copy={data.code} data-service={slugOf(article.id)}>
-            <span class="copy-label">コピー</span>
-          </button>
-        </div>
+      {code ? (
+        <>
+          <div class="code-row">
+            <code>{code}</code>
+            <button class="copy-btn" type="button" data-copy={code} data-service={slug}>
+              <span class="copy-label">コピー</span>
+            </button>
+          </div>
+          {friendCode && (
+            <div class="code-row">
+              <code>{friendCode}</code>
+              <button class="copy-btn" type="button" data-copy={friendCode} data-service={slug}>
+                <span class="copy-label">コピー</span>
+              </button>
+            </div>
+          )}
+        </>
       ) : (
         <p class="conditions">紹介コードはありません。紹介リンクから登録してください。</p>
       )}
-      {data.conditions ? (
-        <p class="conditions">{data.conditions}</p>
-      ) : (
-        <p class="conditions">条件・注意事項は上の記事本文で確認してから登録してください。</p>
-      )}
-      {data.url ? (
-        <a class="register-btn" href={data.url} target="_blank" rel="sponsored noopener" data-service={slugOf(article.id)} data-position="article_bottom">
+      <p class="conditions">条件・期限は上の「特典の定義」で確認してから登録してください。</p>
+      {url ? (
+        <a class="register-btn" href={url} target="_blank" rel="sponsored noopener" data-service={slug} data-position="article_bottom" data-ref-service={slug} data-ref-placement="article_bottom">
           無料で登録する
         </a>
-      ) : data.officialSite ? (
-        <a class="register-btn" href={data.officialSite} target="_blank" rel="noopener" data-service={slugOf(article.id)} data-position="article_bottom">
+      ) : officialSite ? (
+        <a class="register-btn" href={officialSite} target="_blank" rel="noopener" data-service={slug} data-position="article_bottom">
           公式サイトを見る
         </a>
       ) : (
         <p class="conditions">※{data.service}は招待コードのみの紹介です。アプリ・サイト内でコードを入力してください。</p>
       )}
-      {BOARD_SLUG_MAP[slugOf(article.id)] && (
-        <p><a href={`https://mea-poikatsu.github.io/mea-keijiban/service/${BOARD_SLUG_MAP[slugOf(article.id)]}/`} target="_blank" rel="noopener">みんなのコードも見る（掲示板）</a></p>
+      {BOARD_SLUG_MAP[slug] && (
+        <p><a href={`https://mea-poikatsu.github.io/mea-keijiban/service/${BOARD_SLUG_MAP[slug]}/`} target="_blank" rel="noopener">みんなのコードも見る（掲示板）</a></p>
       )}
     </section>
 

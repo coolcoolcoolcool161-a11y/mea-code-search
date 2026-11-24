@@ -444,3 +444,80 @@ tbody tr:hover { background: #fff0f5; }
    本文 = LINE Seed JP（Webフォント）/ 見出し = 丸ゴシック系（S07のみ角ゴシック） */
 h1, h2, h3, .brand { font-family: var(--font-heading); }
 h1, .brand { font-weight: 900; }
+
+/* === S04再構築（2026-11-25 サービス別ページ型・TopParrain式純化＋デザイン強化版） === */
+/* トップ：サービス別ページへの入口リスト（一覧で完結させず個別ページへ送る） */
+.entry-list { display: grid; grid-template-columns: 1fr; gap: 12px; margin: 16px 0; }
+.service-entry {
+  position: relative; overflow: hidden; background: #fff;
+  border: var(--border-card); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card); padding: 16px 18px 14px;
+}
+.service-entry::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: var(--gradient-brand);
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .service-entry { transition: transform .18s ease, box-shadow .18s ease; }
+  .service-entry:hover { transform: translateY(-2px); box-shadow: var(--shadow-card-hover); }
+}
+.entry-main { display: block; text-decoration: none; color: inherit; }
+.entry-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.entry-head h3 { margin: 0; font-size: 1.12rem; color: var(--color-primary-strong); }
+.entry-state {
+  font-size: var(--text-xs); font-weight: 700; white-space: nowrap;
+  border-radius: var(--radius-pill); padding: 3px 10px;
+}
+.entry-state-code { background: var(--gradient-badge); color: var(--color-primary-strong); border: 1px solid var(--color-primary); }
+.entry-state-link { background: #fff; color: var(--muted); border: 1px solid var(--line); }
+.entry-state-codeonly { background: #fff; color: var(--color-primary-strong); border: 1px dashed var(--color-primary); }
+.entry-benefit { margin: 8px 0 0; font-weight: 700; color: var(--color-benefit-text); font-size: 1.02rem; }
+.entry-benefit-label {
+  display: inline-block; font-size: var(--text-xs); font-weight: 700; color: #fff;
+  background: var(--gradient-primary); border-radius: 6px; padding: 1px 8px; margin-right: 8px;
+  vertical-align: 2px;
+}
+.entry-code { margin: 4px 0 0; font-size: 0.9rem; color: var(--muted); }
+.entry-code code { font-family: var(--font-code); font-weight: 700; color: var(--ink); }
+.entry-foot { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.entry-more { margin-left: auto; font-weight: 700; font-size: var(--text-sm); color: var(--color-primary-strong); white-space: nowrap; }
+
+/* 記事ページ：バナー */
+.banner-img { border-radius: 12px; margin: 12px 0 4px; width: 100%; height: auto; }
+
+/* 記事ページ：特典定義ボックス（招待された側がもらえる特典＋条件を定義として明示） */
+.benefit-def {
+  margin: 20px 0; border-radius: var(--radius-lg); overflow: hidden;
+  border: 1px solid #f7c9da; box-shadow: var(--shadow-card); background: #fff;
+}
+.benefit-def-title {
+  margin: 0; padding: 10px 16px; font-size: 1.02rem; color: #fff;
+  background: var(--gradient-primary); border-bottom: none;
+}
+.benefit-def-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 10px; }
+.benefit-def-label { font-size: var(--text-xs); font-weight: 700; color: var(--muted); margin: 0 0 2px; }
+.benefit-def-value { margin: 0; font-size: 1.3rem; line-height: 1.35; color: var(--color-benefit-text); }
+.benefit-def-value .benefit-def-label { display: block; }
+.benefit-def-conditions { margin: 0; padding-left: 1.3em; }
+.benefit-def-conditions li { margin: 3px 0; }
+.benefit-def-deadline { margin: 0; font-weight: 700; }
+.benefit-def-deadline .benefit-def-label { display: inline-block; margin-right: 8px; }
+.benefit-def-verified { margin: 0; font-size: var(--text-sm); color: var(--muted); }
+
+/* 記事ページ：運営コードボックス（コード大きく＋コピー＋登録CTA） */
+.code-box {
+  margin: 20px 0; padding: 18px 16px; display: flex; flex-direction: column; gap: 10px;
+  border: 2px solid transparent; border-radius: var(--radius-lg);
+  background: linear-gradient(#ffffff, #fff8fa) padding-box, var(--gradient-brand) border-box;
+  box-shadow: var(--shadow-card);
+}
+.code-box-title { margin: 0; font-size: 1.1rem; }
+.code-box-label { margin: 2px 0 0; font-size: var(--text-sm); font-weight: 700; color: var(--muted); }
+.code-row-big code {
+  font-size: clamp(1.45rem, 6.4vw, 2rem); font-weight: 700; letter-spacing: 0.04em;
+  padding: 10px 16px;
+}
+.code-box .register-btn { margin-top: 4px; }
+.code-box .points { margin: 4px 0 0; padding-left: 1.4em; font-size: 0.95rem; }
+.code-box .points li { margin: 4px 0; }
+.code-box .pr-note { font-size: 0.85rem; color: var(--muted); margin: 0; }

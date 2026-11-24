@@ -6,7 +6,7 @@ export const SITE = {
   siteUrl: 'https://mea-poikatsu.github.io/mea-code-search',
   description:
     'ワラウ・ハピタス・モッピー・Freecash・TikTok・PayPay・楽天モバイルなど全19サービスの紹介コード・招待コードを検索してすぐコピー。サービス名・コード・特典で絞り込めます。',
-  dateModified: '2026-11-21',
+  dateModified: '2026-11-25',
   gaMeasurementId: 'G-8BB8V3DRW8',
   xAccount: 'https://x.com/pppppuririn',
   hubUrl:
